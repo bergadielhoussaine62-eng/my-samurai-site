@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samurai Street — سلا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Cinzel:wght@400;600;900&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#C41E3A;--deep-red:#8B0000;--gold:#D4A843;--black:#0A0A0A;--charcoal:#1A1A1A;--white:#FFFFFF; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--white);font-family:'Noto Naskh Arabic',serif;overflow-x:hidden;cursor:none;}
+  .cursor{width:16px;height:16px;border:2px solid var(--red);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform .15s ease,background .15s ease;transform:translate(-50%,-50%);}
+  .cursor.hover{background:var(--red);transform:translate(-50%,-50%) scale(1.6);}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent);transition:background .4s;}
+  nav.scrolled{background:rgba(10,10,10,.97);border-bottom:1px solid rgba(196,30,58,.3);}
+  .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-kanji{font-family:'Noto Serif JP',serif;font-size:28px;color:var(--red);text-shadow:0 0 20px rgba(196,30,58,.6);}
+  .logo-text{display:flex;flex-direction:column;line-height:1;}
+  .logo-en{font-family:'Cinzel',serif;font-size:13px;letter-spacing:4px;color:var(--gold);}
+  .logo-ar{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+  .nav-links{display:flex;gap:2rem;list-style:none;direction:ltr;}
+  .nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:color .3s;position:relative;cursor:pointer;}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--red);transform:scaleX(0);transition:transform .3s;}
+  .nav-links a:hover{color:var(--white);}
+  .nav-links a:hover::after{transform:scaleX(1);}
+
+  /* LANG SWITCHER */
+  .lang-switcher{display:flex;gap:4px;direction:ltr;}
+  .lang-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);padding:5px 10px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .3s;}
+  .lang-btn.active{border-color:var(--red);color:var(--white);background:rgba(196,30,58,.2);}
+  .lang-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+  /* HERO */
+  .hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .hero-bg{position:absolute;inset:-20%;background-image:url('https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=1800&q=80');background-size:cover;background-position:center;filter:brightness(.25) saturate(.6);animation:subtleZoom 20s ease-in-out infinite alternate;}
+  @keyframes subtleZoom{from{transform:scale(1.05);}to{transform:scale(1.15);}}
+  .hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 20%,rgba(0,0,0,.7) 100%),linear-gradient(to bottom,transparent 40%,var(--black) 100%);}
+  .hero-stripe{position:absolute;left:8%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--red),transparent);opacity:.6;}
+  .hero-stripe-right{position:absolute;right:8%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(212,168,67,.4),transparent);}
+  .hero-kanji-deco{position:absolute;font-family:'Noto Serif JP',serif;color:rgba(196,30,58,.08);user-select:none;pointer-events:none;line-height:1;}
+  .kanji-1{font-size:300px;top:50%;right:5%;transform:translateY(-50%);}
+  .kanji-2{font-size:120px;bottom:10%;left:12%;opacity:.05;}
+  .hero-content{position:relative;text-align:center;z-index:2;padding:0 2rem;animation:fadeInUp 1.2s ease both;}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+  .hero-eyebrow{font-family:'Cinzel',serif;font-size:11px;letter-spacing:6px;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+  .hero-eyebrow::before,.hero-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold));max-width:80px;}
+  .hero-eyebrow::after{background:linear-gradient(to left,transparent,var(--gold));}
+  .hero-title{font-family:'Cinzel',serif;font-size:clamp(52px,10vw,110px);font-weight:900;line-height:.9;letter-spacing:-2px;}
+  .hero-title .line1{display:block;color:var(--white);}
+  .hero-title .line2{display:block;color:var(--red);text-shadow:0 0 40px rgba(196,30,58,.8),0 0 80px rgba(196,30,58,.3);}
+  .hero-jp{font-family:'Noto Serif JP',serif;font-size:22px;color:rgba(255,255,255,.3);margin-top:.5rem;letter-spacing:8px;}
+  .hero-desc{font-size:16px;color:rgba(255,255,255,.65);max-width:480px;margin:2rem auto;line-height:1.9;}
+  .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;}
+  .btn-main{background:var(--red);color:var(--white);padding:14px 36px;border:none;font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);position:relative;overflow:hidden;}
+  .btn-main::before{content:'';position:absolute;inset:0;background:var(--deep-red);transform:translateX(-100%);transition:transform .3s;}
+  .btn-main:hover::before{transform:translateX(0);}
+  .btn-main span{position:relative;z-index:1;}
+  .btn-outline{background:transparent;color:var(--gold);padding:13px 36px;border:1px solid rgba(212,168,67,.5);font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;}
+  .btn-outline:hover{background:rgba(212,168,67,.1);border-color:var(--gold);}
+  .hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.3);font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;animation:bounce 2s ease-in-out infinite;}
+  @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+  .scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);}
+
+  /* STATS */
+  .stats-section{background:var(--red);padding:1.5rem 3rem;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
+  .stat-item{text-align:center;}
+  .stat-number{font-family:'Cinzel',serif;font-size:32px;font-weight:600;color:var(--white);line-height:1;}
+  .stat-label{font-size:12px;color:rgba(255,255,255,.75);margin-top:4px;}
+
+  /* SECTION */
+  .section-header{text-align:center;padding:5rem 2rem 3rem;}
+  .section-tag{font-family:'Cinzel',serif;font-size:10px;letter-spacing:5px;color:var(--red);text-transform:uppercase;margin-bottom:1rem;}
+  .section-title-main{font-family:'Cinzel',serif;font-size:clamp(32px,5vw,56px);font-weight:600;color:var(--white);line-height:1.1;}
+  .section-title-sub{font-size:clamp(16px,2.5vw,24px);color:rgba(255,255,255,.4);margin-top:.5rem;}
+  .section-divider{width:60px;height:2px;background:linear-gradient(to right,var(--red),var(--gold));margin:1.5rem auto 0;}
+
+  /* GALLERY */
+  .gallery-section{padding:0 0 5rem;background:var(--charcoal);}
+  .gallery-mosaic{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:300px 300px;gap:4px;}
+  .gallery-item{overflow:hidden;position:relative;cursor:pointer;}
+  .gallery-item:nth-child(1){grid-column:1;grid-row:1/3;}
+  .gallery-item:nth-child(2){grid-column:2;grid-row:1;}
+  .gallery-item:nth-child(3){grid-column:3;grid-row:1;}
+  .gallery-item:nth-child(4){grid-column:2/4;grid-row:2;}
+  .gallery-img{width:100%;height:100%;background-size:cover;background-position:center;transition:transform .8s cubic-bezier(.25,.46,.45,.94);filter:brightness(.7) saturate(.8);}
+  .gallery-item:hover .gallery-img{transform:scale(1.08);filter:brightness(.9) saturate(1.1);}
+  .gallery-label{position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.5rem 1rem;background:linear-gradient(to top,rgba(0,0,0,.9),transparent);font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:2px;transform:translateY(100%);transition:transform .4s ease;}
+  .gallery-item:hover .gallery-label{transform:translateY(0);}
+  .bg-s1{background-image:url('https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=900&q=80');}
+  .bg-s2{background-image:url('https://images.unsplash.com/photo-1562802378-063ec186a863?w=900&q=80');}
+  .bg-s3{background-image:url('https://images.unsplash.com/photo-1553621042-f6e147245754?w=900&q=80');}
+  .bg-s4{background-image:url('https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=1200&q=80');}
+
+  /* MENU */
+  .menu-section{background:var(--black);padding:0 3rem 5rem;}
+  .menu-filters{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:3rem;direction:ltr;}
+  .filter-btn{padding:8px 20px;background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+  .filter-btn.active,.filter-btn:hover{border-color:var(--red);color:var(--white);background:rgba(196,30,58,.15);}
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;border:1px solid rgba(255,255,255,.06);}
+  .menu-card{padding:2rem;border:1px solid rgba(255,255,255,.06);background:var(--charcoal);transition:all .4s;position:relative;overflow:hidden;}
+  .menu-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:var(--red);transition:height .4s;}
+  .menu-card:hover{background:#222;}
+  .menu-card:hover::before{height:100%;}
+  .menu-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+  .menu-jp{font-family:'Noto Serif JP',serif;font-size:28px;color:rgba(196,30,58,.6);line-height:1;}
+  .menu-badge{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:3px 8px;}
+  .badge-popular{background:rgba(196,30,58,.2);color:var(--red);border:1px solid rgba(196,30,58,.3);}
+  .badge-new{background:rgba(212,168,67,.15);color:var(--gold);border:1px solid rgba(212,168,67,.3);}
+  .badge-chef{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.1);}
+  .menu-name{font-family:'Cinzel',serif;font-size:17px;font-weight:600;color:var(--white);margin-bottom:6px;}
+  .menu-name-local{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:10px;}
+  .menu-desc-local{font-size:12px;color:rgba(255,255,255,.35);line-height:1.7;}
+  .menu-footer{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.06);}
+  .menu-price{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);font-weight:600;}
+  .menu-price span{font-size:12px;color:rgba(255,255,255,.3);margin-right:4px;}
+  .add-btn{width:32px;height:32px;border-radius:50%;background:rgba(196,30,58,.2);border:1px solid rgba(196,30,58,.4);color:var(--red);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+  .add-btn:hover{background:var(--red);color:var(--white);}
+
+  /* MID BANNER */
+  .mid-banner{position:relative;height:400px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .mid-banner-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=1600&q=80');background-size:cover;background-position:center;filter:brightness(.2) saturate(.4);transform:scale(1.1);transition:transform .5s;}
+  .mid-banner:hover .mid-banner-bg{transform:scale(1.15);}
+  .mid-banner-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(196,30,58,.1),rgba(0,0,0,.6));}
+  .mid-banner-content{position:relative;text-align:center;z-index:2;}
+  .mid-banner-content p{font-family:'Noto Serif JP',serif;font-size:60px;color:rgba(196,30,58,.4);letter-spacing:20px;display:block;}
+  .mid-banner-content h2{font-family:'Cinzel',serif;font-size:clamp(28px,5vw,52px);font-weight:600;color:var(--white);line-height:1.2;}
+  .mid-banner-content h2 em{color:var(--red);font-style:normal;text-shadow:0 0 40px rgba(196,30,58,.6);}
+  .mid-banner-content .sub{font-size:16px;color:rgba(255,255,255,.5);margin-top:1rem;}
+
+  /* RESERVATION */
+  .resa-section{background:var(--charcoal);padding:5rem 3rem;}
+  .resa-container{max-width:800px;margin:0 auto;border:1px solid rgba(196,30,58,.3);padding:3rem;position:relative;}
+  .resa-container::before{content:'侍';position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-family:'Noto Serif JP',serif;font-size:32px;color:var(--red);background:var(--charcoal);padding:0 16px;}
+  .resa-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:2rem;}
+  .resa-field{display:flex;flex-direction:column;gap:6px;}
+  .resa-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase;}
+  .resa-input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--white);padding:12px 16px;font-size:14px;font-family:'Noto Naskh Arabic',serif;transition:border-color .3s;outline:none;-webkit-appearance:none;appearance:none;}
+  .resa-input:focus{border-color:var(--red);background:rgba(196,30,58,.05);}
+  .resa-input::placeholder{color:rgba(255,255,255,.2);}
+  .resa-input option{background:var(--charcoal);}
+  .resa-submit{width:100%;margin-top:1.5rem;background:var(--red);color:var(--white);border:none;padding:16px;font-family:'Cinzel',serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+  .resa-submit:hover{background:var(--deep-red);letter-spacing:6px;}
+  .resa-note{text-align:center;font-size:12px;color:rgba(255,255,255,.2);margin-top:1rem;font-family:'Cinzel',serif;letter-spacing:1px;}
+
+  /* ABOUT */
+  .about-wrap{background:var(--black);padding:5rem 0;}
+  .about-section{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;padding:0 3rem;}
+  .about-img-block{position:relative;}
+  .about-img-main{width:100%;aspect-ratio:3/4;background-image:url('https://images.unsplash.com/photo-1600628421055-4d30de868b8f?w=800&q=80');background-size:cover;background-position:center;filter:brightness(.8) saturate(.7);}
+  .about-img-accent{position:absolute;bottom:-2rem;right:-2rem;width:55%;aspect-ratio:1;background-image:url('https://images.unsplash.com/photo-1607301406259-dfb186e15de8?w=400&q=80');background-size:cover;background-position:center;filter:brightness(.9);border:4px solid var(--charcoal);}
+  .about-red-line{position:absolute;top:2rem;left:-1rem;width:3px;height:60%;background:linear-gradient(to bottom,var(--red),transparent);}
+  .about-content{padding-right:2rem;}
+  .about-p{font-size:15px;color:rgba(255,255,255,.6);line-height:1.9;margin-bottom:1.5rem;}
+  .about-exp{display:flex;flex-wrap:wrap;gap:8px;margin:2rem 0;}
+  .exp-tag{border:1px solid rgba(196,30,58,.3);padding:6px 14px;font-family:'Cinzel',serif;font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;}
+  .exp-tag.highlight{border-color:var(--gold);color:var(--gold);}
+  .tl-item{display:flex;gap:1.5rem;align-items:flex-start;padding-bottom:1.5rem;position:relative;}
+  .tl-item::before{content:'';position:absolute;left:38px;top:32px;bottom:0;width:1px;background:rgba(255,255,255,.08);}
+  .tl-item:last-child::before{display:none;}
+  .tl-year{font-family:'Cinzel',serif;font-size:13px;color:var(--red);min-width:44px;font-weight:600;padding-top:2px;}
+  .tl-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:6px;box-shadow:0 0 8px rgba(196,30,58,.6);}
+  .tl-text{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;}
+
+  /* CONTACT */
+  .contact-section{background:var(--charcoal);padding:5rem 3rem;}
+  .contact-grid{max-width:1000px;margin:2rem auto 0;display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+  .contact-card{border:1px solid rgba(255,255,255,.06);padding:2rem;background:var(--black);transition:border-color .3s;}
+  .contact-card:hover{border-color:rgba(196,30,58,.4);}
+  .contact-icon{font-size:32px;margin-bottom:1rem;display:block;}
+  .contact-card-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:8px;}
+  .contact-card-val{font-size:16px;font-weight:600;color:var(--white);margin-bottom:4px;}
+  .contact-card-sub{font-size:13px;color:rgba(255,255,255,.35);}
+  .map-block{max-width:1000px;margin:2rem auto 0;height:200px;background:var(--black);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .map-block::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1200&q=80');background-size:cover;background-position:center;filter:brightness(.1) saturate(0);}
+  .map-text{position:relative;z-index:1;text-align:center;color:rgba(255,255,255,.3);font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;}
+  .map-text strong{display:block;color:var(--gold);font-size:14px;margin-bottom:4px;}
+
+  /* FOOTER */
+  footer{background:var(--black);border-top:1px solid rgba(196,30,58,.2);padding:2.5rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+  .footer-logo{font-family:'Cinzel',serif;font-size:18px;letter-spacing:4px;color:var(--white);}
+  .footer-logo span{color:var(--red);}
+  .footer-jp{font-family:'Noto Serif JP',serif;font-size:24px;color:rgba(196,30,58,.3);}
+  .footer-info{text-align:center;font-size:12px;color:rgba(255,255,255,.2);line-height:1.8;}
+
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem;}
+    .nav-links{display:none;}
+    .about-section{grid-template-columns:1fr;}
+    .contact-grid{grid-template-columns:1fr;}
+    .resa-grid{grid-template-columns:1fr;}
+    .gallery-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+    .gallery-item:nth-child(1){grid-column:1/3;grid-row:auto;}
+    .gallery-item:nth-child(4){grid-column:1/3;}
+    .stats-section{gap:2rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#top" class="nav-logo">
+    <div class="logo-kanji">侍</div>
+    <div class="logo-text">
+      <span class="logo-en">Samurai Street</span>
+      <span class="logo-ar" data-key="city">سلا، المغرب</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#menu" data-key="nav_menu">القايمة</a></li>
+    <li><a href="#reservation" data-key="nav_resa">الحجز</a></li>
+    <li><a href="#about" data-key="nav_about">علينا</a></li>
+    <li><a href="#contact" data-key="nav_contact">تواصل</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('ar')">دارجة</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="top" class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-stripe-right"></div>
+  <div class="hero-kanji-deco kanji-1">寿</div>
+  <div class="hero-kanji-deco kanji-2">侍</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow" data-key="hero_eyebrow">سلا · المغرب · من 2012</div>
+    <h1 class="hero-title">
+      <span class="line1">SAMURAI</span>
+      <span class="line2">STREET</span>
+    </h1>
+    <p class="hero-jp">侍ストリート</p>
+    <p class="hero-desc" data-key="hero_desc">مطبخ ياباني أصيل — سوشي طازج كل نهار، تجربة فريدة فقلب سلا القرية</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-main"><span data-key="btn_menu">🍱 شوف القايمة</span></a>
+      <a href="#reservation" class="btn-outline" data-key="btn_resa">📅 حجز طاولة</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stat-item"><div class="stat-number">12+</div><div class="stat-label" data-key="stat1">سنين خبرة</div></div>
+  <div class="stat-item"><div class="stat-number">5</div><div class="stat-label" data-key="stat2">مطاعم دولية</div></div>
+  <div class="stat-item"><div class="stat-number">40+</div><div class="stat-label" data-key="stat3">نوع سوشي</div></div>
+  <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Halal · حلال</div></div>
+</div>
+
+<!-- GALLERY -->
+<section class="gallery-section">
+  <div class="section-header reveal">
+    <div class="section-tag" data-key="gal_tag">صور · بصري</div>
+    <h2 class="section-title-main" data-key="gal_title">فن السوشي</h2>
+    <p class="section-title-sub" data-key="gal_sub">كل طبق تحفة فنية</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="gallery-mosaic">
+    <div class="gallery-item"><div class="gallery-img bg-s1"></div><div class="gallery-label" data-key="gal_1">رولات خاصة</div></div>
+    <div class="gallery-item"><div class="gallery-img bg-s2"></div><div class="gallery-label" data-key="gal_2">نيغيري تقليدي</div></div>
+    <div class="gallery-item"><div class="gallery-img bg-s3"></div><div class="gallery-label" data-key="gal_3">ساشيمي طازج</div></div>
+    <div class="gallery-item"><div class="gallery-img bg-s4"></div><div class="gallery-label" data-key="gal_4">طبق مشكل خاص</div></div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu" class="menu-section">
+  <div class="section-header reveal">
+    <div class="section-tag" data-key="menu_tag">القايمة</div>
+    <h2 class="section-title-main" data-key="menu_title">تخصصاتنا</h2>
+    <p class="section-title-sub" data-key="menu_sub">كل شي طازج كل نهار</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="menu-filters">
+    <button class="filter-btn active" data-filter="all" data-key="f_all">الكل</button>
+    <button class="filter-btn" data-filter="maki">Maki</button>
+    <button class="filter-btn" data-filter="nigiri">Nigiri</button>
+    <button class="filter-btn" data-filter="special" data-key="f_special">خاص</button>
+    <button class="filter-btn" data-filter="drink" data-key="f_drink">مشروبات</button>
+  </div>
+  <div class="menu-grid" id="menuGrid">
+    <div class="menu-card reveal" data-cat="maki">
+      <div class="menu-card-top"><div class="menu-jp">巻</div><span class="menu-badge badge-popular" data-key="b_pop">مشهور</span></div>
+      <div class="menu-name">Salmon Maki</div>
+      <div class="menu-name-local" data-key="m1_local">ماكي السالمون</div>
+      <div class="menu-desc-local" data-key="m1_desc">سالمون طازج · رز بالخل · نوري · سمسم</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>45</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="maki">
+      <div class="menu-card-top"><div class="menu-jp">巻</div><span class="menu-badge badge-chef" data-key="b_veg">نباتي</span></div>
+      <div class="menu-name">Avocado Maki</div>
+      <div class="menu-name-local" data-key="m2_local">ماكي الأفوكادو</div>
+      <div class="menu-desc-local" data-key="m2_desc">أفوكادو طازج · رز · خيارة · سمسم أسود</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>38</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="nigiri">
+      <div class="menu-card-top"><div class="menu-jp">握</div><span class="menu-badge badge-popular" data-key="b_pop2">مشهور</span></div>
+      <div class="menu-name">Nigiri Thon</div>
+      <div class="menu-name-local" data-key="m3_local">نيغيري التونة</div>
+      <div class="menu-desc-local" data-key="m3_desc">تونة طازجة · رز · واسابي · صوص صويا</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>55</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="special">
+      <div class="menu-card-top"><div class="menu-jp">侍</div><span class="menu-badge badge-new">NEW</span></div>
+      <div class="menu-name">Samurai Roll</div>
+      <div class="menu-name-local" data-key="m4_local">رول الساموراي</div>
+      <div class="menu-desc-local" data-key="m4_desc">توقيع المطعم · سوشي محمر مع صوص البيت</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>85</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="special">
+      <div class="menu-card-top"><div class="menu-jp">祭</div><span class="menu-badge badge-chef" data-key="b_chef">الشاف</span></div>
+      <div class="menu-name">Matsuri Platter</div>
+      <div class="menu-name-local" data-key="m5_local">طبق ماتسوري</div>
+      <div class="menu-desc-local" data-key="m5_desc">طبق مشكل 16 قطعة — نيغيري، ماكي، خاص</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>150</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="nigiri">
+      <div class="menu-card-top"><div class="menu-jp">握</div></div>
+      <div class="menu-name">Nigiri Crevette</div>
+      <div class="menu-name-local" data-key="m6_local">نيغيري الجمبري</div>
+      <div class="menu-desc-local" data-key="m6_desc">جمبري طازج · رز · سمسم أسود · واسابي</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>48</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="drink">
+      <div class="menu-card-top"><div class="menu-jp">茶</div></div>
+      <div class="menu-name">Matcha Latte</div>
+      <div class="menu-name-local" data-key="m7_local">ماتشا لاتيه</div>
+      <div class="menu-desc-local" data-key="m7_desc">شاي أخضر ياباني · حليب سخون · عسل</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>28</div><button class="add-btn">+</button></div>
+    </div>
+    <div class="menu-card reveal" data-cat="maki">
+      <div class="menu-card-top"><div class="menu-jp">巻</div><span class="menu-badge badge-new">NEW</span></div>
+      <div class="menu-name">Dragon Roll</div>
+      <div class="menu-name-local" data-key="m8_local">رول التنين</div>
+      <div class="menu-desc-local" data-key="m8_desc">أفوكادو · سالمون · حار · صوص سريراشا</div>
+      <div class="menu-footer"><div class="menu-price"><span>DH</span>72</div><button class="add-btn">+</button></div>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:2rem;font-size:12px;color:rgba(255,255,255,.2);font-family:'Cinzel',serif;letter-spacing:2px;" data-key="menu_note">* الأسعار والقايمة يمكن تتبدل</p>
+</section>
+
+<!-- MID BANNER -->
+<div class="mid-banner">
+  <div class="mid-banner-bg"></div>
+  <div class="mid-banner-overlay"></div>
+  <div class="mid-banner-content">
+    <p>職人</p>
+    <h2>Authentic Japanese<br>crafted with <em>passion</em></h2>
+    <div class="sub" data-key="banner_sub">مصنوع بشغف — كل طبق قصة</div>
+  </div>
+</div>
+
+<!-- RESERVATION -->
+<section id="reservation" class="resa-section">
+  <div class="section-header reveal">
+    <div class="section-tag" data-key="resa_tag">الحجز</div>
+    <h2 class="section-title-main" data-key="resa_title">حجز طاولة</h2>
+    <p class="section-title-sub" data-key="resa_sub">احجز دابا وكنؤكدو ليك على واتساب</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="resa-container reveal">
+    <div class="resa-grid">
+      <div class="resa-field">
+        <label class="resa-label" data-key="resa_name">الاسم</label>
+        <input class="resa-input" type="text" data-placeholder-key="ph_name" placeholder="محمد...">
+      </div>
+      <div class="resa-field">
+        <label class="resa-label" data-key="resa_phone">الهاتف</label>
+        <input class="resa-input" type="tel" placeholder="+212 725 884 766">
+      </div>
+      <div class="resa-field">
+        <label class="resa-label" data-key="resa_date">التاريخ</label>
+        <input class="resa-input" type="date">
+      </div>
+      <div class="resa-field">
+        <label class="resa-label" data-key="resa_time">الوقت</label>
+        <select class="resa-input">
+          <option>12:00</option><option>13:00</option><option>19:00</option><option>20:00</option><option>21:00</option>
+        </select>
+      </div>
+      <div class="resa-field">
+        <label class="resa-label" data-key="resa_persons">عدد الناس</label>
+        <select class="resa-input">
+          <option>1</option><option>2</option><option>3-4</option><option>5+</option>
+        </select>
+      </div>
+      <div class="resa-field">
+        <label class="resa-label" data-key="resa_note_lbl">ملاحظة</label>
+        <input class="resa-input" type="text" data-placeholder-key="ph_note" placeholder="عيد ميلاد، حساسية...">
+      </div>
+    </div>
+    <button class="resa-submit" data-key="resa_btn" onclick="sendWhatsApp()">تأكيد الحجز</button>
+    <p class="resa-note" data-key="resa_confirm">التأكيد عبر واتساب</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about-wrap">
+  <div class="section-header reveal">
+    <div class="section-tag" data-key="about_tag">علينا</div>
+    <h2 class="section-title-main" data-key="about_title">قصة الشاف</h2>
+    <p class="section-title-sub" data-key="about_sub">من الكويت لسلا</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="about-section">
+    <div class="about-img-block reveal">
+      <div class="about-red-line"></div>
+      <div class="about-img-main"></div>
+      <div class="about-img-accent"></div>
+    </div>
+    <div class="about-content reveal">
+      <p class="about-p" data-key="about_p1">Samurai Street هو مشروع شاف عندو أكثر من 12 سنة خبرة فأكبر مطاعم يابانية فالكويت والخليج. الهدف: نجيبو تجربة السوشي الأصيلة بدون تنازل لمدينة سلا.</p>
+      <p class="about-p" data-key="about_p2">كل طبق كيتحضر بيدين مع مكونات طازجة ديال النهار وتقنيات يابانية حقيقية.</p>
+      <div class="about-exp">
+        <span class="exp-tag highlight">Yoka Sushi</span>
+        <span class="exp-tag highlight">Matsuri</span>
+        <span class="exp-tag highlight">Wakami</span>
+        <span class="exp-tag highlight">Kozamiya</span>
+        <span class="exp-tag">Kuwait 🇰🇼</span>
+        <span class="exp-tag">+12 ans</span>
+      </div>
+      <div class="about-timeline">
+        <div class="tl-item"><div class="tl-year">2012</div><div class="tl-dot"></div><div class="tl-text" data-key="tl1">البداية — Yoka Sushi, Kuwait</div></div>
+        <div class="tl-item"><div class="tl-year">2015</div><div class="tl-dot"></div><div class="tl-text" data-key="tl2">Matsuri & Wakami — تخصص فالماكي والنيغيري</div></div>
+        <div class="tl-item"><div class="tl-year">2019</div><div class="tl-dot"></div><div class="tl-text" data-key="tl3">Kozamiya — إتقان السوشي الأوماكاسي</div></div>
+        <div class="tl-item"><div class="tl-year">2024</div><div class="tl-dot"></div><div class="tl-text" data-key="tl4">Samurai Street 🇲🇦 — سلا القرية</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-header reveal">
+    <div class="section-tag" data-key="contact_tag">تواصل</div>
+    <h2 class="section-title-main" data-key="contact_title">وين نلقاونا</h2>
+    <p class="section-title-sub" data-key="contact_sub">سلا القرية، المغرب</p>
+    <div class="section-divider"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card reveal">
+      <span class="contact-icon">📍</span>
+      <div class="contact-card-label" data-key="c_addr_lbl">العنوان</div>
+      <div class="contact-card-val" data-key="c_addr_val">سلا القرية، سلا</div>
+      <div class="contact-card-sub">Salé Ville, Salé — Maroc 🇲🇦</div>
+    </div>
+    <div class="contact-card reveal">
+      <span class="contact-icon">💬</span>
+      <div class="contact-card-label">WhatsApp</div>
+      <div class="contact-card-val"><a href="https://wa.me/212725884766" style="color:var(--white);text-decoration:none;">+212 725 884 766</a></div>
+      <div class="contact-card-sub" data-key="c_wa_sub">أسرع طريقة للحجز</div>
+    </div>
+    <div class="contact-card reveal">
+      <span class="contact-icon">⏰</span>
+      <div class="contact-card-label" data-key="c_hours_lbl">ساعات العمل</div>
+      <div class="contact-card-val">12:00–15:00 · 19:00–23:00</div>
+      <div class="contact-card-sub" data-key="c_hours_sub">مغلق نهار الإثنين</div>
+    </div>
+    <div class="contact-card reveal">
+      <span class="contact-icon">📸</span>
+      <div class="contact-card-label">Instagram</div>
+      <div class="contact-card-val"><a href="https://www.instagram.com/samuraistret/" target="_blank" style="color:var(--white);text-decoration:none;">@samuraistret</a></div>
+      <div class="contact-card-sub" data-key="c_ig_sub"><a href="https://www.instagram.com/samuraistret/" target="_blank" style="color:rgba(255,255,255,.35);text-decoration:none;">صورنا اليومية ↗</a></div>
+    </div>
+  </div>
+  <div class="map-block">
+    <div class="map-text">
+      <strong>سلا القرية · Salé Ville</strong>
+      <span data-key="map_soon">Google Maps — كتضاف قريب</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SAMURAI <span>STREET</span></div>
+  <div class="footer-info">
+    <span data-key="footer_info">سلا، المغرب · حلال · 2024</span>
+  </div>
+  <div class="footer-jp">侍</div>
+</footer>
+
+<script>
+// ===================== TRANSLATIONS =====================
+const T = {
+  ar: {
+    dir:'rtl', lang:'ar',
+    city:'سلا، المغرب',
+    nav_menu:'القايمة', nav_resa:'الحجز', nav_about:'علينا', nav_contact:'تواصل',
+    hero_eyebrow:'سلا · المغرب · من 2012',
+    hero_desc:'مطبخ ياباني أصيل — سوشي طازج كل نهار، تجربة فريدة فقلب سلا القرية',
+    btn_menu:'🍱 شوف القايمة', btn_resa:'📅 حجز طاولة',
+    stat1:'سنين خبرة', stat2:'مطاعم دولية', stat3:'نوع سوشي',
+    gal_tag:'صور · بصري', gal_title:'فن السوشي', gal_sub:'كل طبق تحفة فنية',
+    gal_1:'رولات خاصة', gal_2:'نيغيري تقليدي', gal_3:'ساشيمي طازج', gal_4:'طبق مشكل خاص',
+    menu_tag:'القايمة', menu_title:'تخصصاتنا', menu_sub:'كل شي طازج كل نهار',
+    f_all:'الكل', f_special:'خاص', f_drink:'مشروبات',
+    b_pop:'مشهور', b_pop2:'مشهور', b_veg:'نباتي', b_chef:'الشاف',
+    m1_local:'ماكي السالمون', m1_desc:'سالمون طازج · رز بالخل · نوري · سمسم',
+    m2_local:'ماكي الأفوكادو', m2_desc:'أفوكادو طازج · رز · خيارة · سمسم أسود',
+    m3_local:'نيغيري التونة', m3_desc:'تونة طازجة · رز · واسابي · صوص صويا',
+    m4_local:'رول الساموراي', m4_desc:'توقيع المطعم · سوشي محمر مع صوص البيت',
+    m5_local:'طبق ماتسوري', m5_desc:'طبق مشكل 16 قطعة — نيغيري، ماكي، خاص',
+    m6_local:'نيغيري الجمبري', m6_desc:'جمبري طازج · رز · سمسم أسود · واسابي',
+    m7_local:'ماتشا لاتيه', m7_desc:'شاي أخضر ياباني · حليب سخون · عسل',
+    m8_local:'رول التنين', m8_desc:'أفوكادو · سالمون · حار · صوص سريراشا',
+    menu_note:'* الأسعار والقايمة يمكن تتبدل',
+    banner_sub:'مصنوع بشغف — كل طبق قصة',
+    resa_tag:'الحجز', resa_title:'حجز طاولة', resa_sub:'احجز دابا وكنؤكدو ليك على واتساب',
+    resa_name:'الاسم', resa_phone:'الهاتف', resa_date:'التاريخ', resa_time:'الوقت',
+    resa_persons:'عدد الناس', resa_note_lbl:'ملاحظة',
+    ph_name:'محمد...', ph_note:'عيد ميلاد، حساسية...',
+    resa_btn:'تأكيد الحجز', resa_confirm:'التأكيد عبر واتساب',
+    about_tag:'علينا', about_title:'قصة الشاف', about_sub:'من الكويت لسلا',
+    about_p1:'Samurai Street هو مشروع شاف عندو أكثر من 12 سنة خبرة فأكبر مطاعم يابانية فالكويت والخليج. الهدف: نجيبو تجربة السوشي الأصيلة بدون تنازل لمدينة سلا.',
+    about_p2:'كل طبق كيتحضر بيدين مع مكونات طازجة ديال النهار وتقنيات يابانية حقيقية.',
+    tl1:'البداية — Yoka Sushi, Kuwait', tl2:'Matsuri & Wakami — تخصص فالماكي والنيغيري',
+    tl3:'Kozamiya — إتقان السوشي الأوماكاسي', tl4:'Samurai Street 🇲🇦 — سلا القرية',
+    contact_tag:'تواصل', contact_title:'وين نلقاونا', contact_sub:'سلا القرية، المغرب',
+    c_addr_lbl:'العنوان', c_addr_val:'سلا القرية، سلا',
+    c_wa_sub:'أسرع طريقة للحجز', c_hours_lbl:'ساعات العمل', c_hours_sub:'مغلق نهار الإثنين',
+    c_ig_sub:'صورنا اليومية ↗',
+    map_soon:'Google Maps — كتضاف قريب',
+    footer_info:'سلا، المغرب · حلال · 2024'
+  },
+  fr: {
+    dir:'ltr', lang:'fr',
+    city:'Salé, Maroc',
+    nav_menu:'Menu', nav_resa:'Réservation', nav_about:'À propos', nav_contact:'Contact',
+    hero_eyebrow:'Salé · Maroc · Depuis 2012',
+    hero_desc:'Cuisine japonaise authentique — Sushi frais chaque jour, une expérience unique à Salé',
+    btn_menu:'🍱 Voir le menu', btn_resa:'📅 Réserver',
+    stat1:'Ans d\'expérience', stat2:'Restaurants internationaux', stat3:'Spécialités sushi',
+    gal_tag:'Galerie · Visuel', gal_title:'L\'Art du Sushi', gal_sub:'Chaque plat, une œuvre d\'art',
+    gal_1:'Signature Rolls', gal_2:'Nigiri Classique', gal_3:'Sashimi Frais', gal_4:'Plateau Spécial',
+    menu_tag:'Menu', menu_title:'Nos Spécialités', menu_sub:'Frais préparé chaque jour',
+    f_all:'Tout', f_special:'Spécial', f_drink:'Boissons',
+    b_pop:'Populaire', b_pop2:'Populaire', b_veg:'Végétarien', b_chef:'Chef',
+    m1_local:'Maki Saumon', m1_desc:'Saumon frais · riz vinaigré · algue nori · sésame',
+    m2_local:'Maki Avocat', m2_desc:'Avocat frais · riz · concombre · sésame noir',
+    m3_local:'Nigiri Thon', m3_desc:'Thon frais · riz · wasabi · sauce soja',
+    m4_local:'Roll Samouraï', m4_desc:'Signature du chef · sushi grillé sauce maison',
+    m5_local:'Plateau Matsuri', m5_desc:'Assortiment 16 pièces — nigiri, maki, spécial',
+    m6_local:'Nigiri Crevette', m6_desc:'Crevette fraîche · riz · sésame noir · wasabi',
+    m7_local:'Matcha Latte', m7_desc:'Thé vert japonais · lait chaud · miel',
+    m8_local:'Dragon Roll', m8_desc:'Avocat · saumon · épicé · sauce sriracha',
+    menu_note:'* Prix et menu susceptibles de changer',
+    banner_sub:'Fait avec passion — chaque plat raconte une histoire',
+    resa_tag:'Réservation', resa_title:'Réserver une Table', resa_sub:'Réservez maintenant, confirmation par WhatsApp',
+    resa_name:'Nom', resa_phone:'Téléphone', resa_date:'Date', resa_time:'Heure',
+    resa_persons:'Nombre de personnes', resa_note_lbl:'Note',
+    ph_name:'Mohamed...', ph_note:'Anniversaire, allergie...',
+    resa_btn:'Confirmer la réservation', resa_confirm:'Confirmation par WhatsApp',
+    about_tag:'À propos', about_title:'L\'histoire du Chef', about_sub:'Du Koweït à Salé',
+    about_p1:'Samurai Street est le projet d\'un chef avec plus de 12 ans d\'expérience dans les meilleurs restaurants japonais du Koweït et du Golfe. L\'objectif : apporter une expérience sushi authentique, sans compromis, à Salé.',
+    about_p2:'Chaque plat est préparé à la main avec des ingrédients frais du jour et des techniques japonaises authentiques.',
+    tl1:'Début — Yoka Sushi, Koweït', tl2:'Matsuri & Wakami — spécialisation maki et nigiri',
+    tl3:'Kozamiya — maîtrise du sushi omakase', tl4:'Samurai Street 🇲🇦 — Salé Ville',
+    contact_tag:'Contact', contact_title:'Nous Trouver', contact_sub:'Salé Ville, Maroc',
+    c_addr_lbl:'Adresse', c_addr_val:'Salé Ville, Salé',
+    c_wa_sub:'Réservation rapide', c_hours_lbl:'Horaires', c_hours_sub:'Fermé le lundi',
+    c_ig_sub:'Nos créations du jour ↗',
+    map_soon:'Google Maps — Bientôt disponible',
+    footer_info:'Salé, Maroc · Halal · 2024'
+  },
+  en: {
+    dir:'ltr', lang:'en',
+    city:'Salé, Morocco',
+    nav_menu:'Menu', nav_resa:'Reservation', nav_about:'About', nav_contact:'Contact',
+    hero_eyebrow:'Salé · Morocco · Since 2012',
+    hero_desc:'Authentic Japanese cuisine — Fresh sushi every day, a unique experience in the heart of Salé',
+    btn_menu:'🍱 View Menu', btn_resa:'📅 Reserve a Table',
+    stat1:'Years of experience', stat2:'International restaurants', stat3:'Sushi varieties',
+    gal_tag:'Gallery · Visual', gal_title:'The Art of Sushi', gal_sub:'Every dish, a work of art',
+    gal_1:'Signature Rolls', gal_2:'Classic Nigiri', gal_3:'Fresh Sashimi', gal_4:'Special Platter',
+    menu_tag:'Menu', menu_title:'Our Specialties', menu_sub:'Fresh made every day',
+    f_all:'All', f_special:'Special', f_drink:'Drinks',
+    b_pop:'Popular', b_pop2:'Popular', b_veg:'Vegetarian', b_chef:'Chef\'s Pick',
+    m1_local:'Salmon Maki', m1_desc:'Fresh salmon · seasoned rice · nori · sesame',
+    m2_local:'Avocado Maki', m2_desc:'Fresh avocado · rice · cucumber · black sesame',
+    m3_local:'Tuna Nigiri', m3_desc:'Fresh tuna · rice · wasabi · soy sauce',
+    m4_local:'Samurai Roll', m4_desc:'Chef\'s signature · grilled sushi with house sauce',
+    m5_local:'Matsuri Platter', m5_desc:'16-piece assortment — nigiri, maki, special',
+    m6_local:'Shrimp Nigiri', m6_desc:'Fresh shrimp · rice · black sesame · wasabi',
+    m7_local:'Matcha Latte', m7_desc:'Japanese green tea · warm milk · honey',
+    m8_local:'Dragon Roll', m8_desc:'Avocado · salmon · spicy · sriracha sauce',
+    menu_note:'* Prices and menu subject to change',
+    banner_sub:'Made with passion — every dish tells a story',
+    resa_tag:'Reservation', resa_title:'Book a Table', resa_sub:'Reserve now, confirmed via WhatsApp',
+    resa_name:'Name', resa_phone:'Phone', resa_date:'Date', resa_time:'Time',
+    resa_persons:'Number of guests', resa_note_lbl:'Note',
+    ph_name:'Mohamed...', ph_note:'Birthday, allergy...',
+    resa_btn:'Confirm Reservation', resa_confirm:'Confirmation via WhatsApp',
+    about_tag:'About', about_title:'The Chef\'s Story', about_sub:'From Kuwait to Salé',
+    about_p1:'Samurai Street is the project of a chef with over 12 years of experience in the top Japanese restaurants of Kuwait and the Gulf. The goal: bring an authentic, uncompromising sushi experience to Salé.',
+    about_p2:'Every dish is hand-crafted with daily fresh ingredients and authentic Japanese techniques.',
+    tl1:'Beginning — Yoka Sushi, Kuwait', tl2:'Matsuri & Wakami — maki and nigiri mastery',
+    tl3:'Kozamiya — omakase sushi expertise', tl4:'Samurai Street 🇲🇦 — Salé Ville',
+    contact_tag:'Contact', contact_title:'Find Us', contact_sub:'Salé Ville, Morocco',
+    c_addr_lbl:'Address', c_addr_val:'Salé Ville, Salé',
+    c_wa_sub:'Fastest way to reserve', c_hours_lbl:'Opening Hours', c_hours_sub:'Closed on Mondays',
+    c_ig_sub:'Our daily creations ↗',
+    map_soon:'Google Maps — Coming soon',
+    footer_info:'Salé, Morocco · Halal · 2024'
+  }
+};
+
+let currentLang = 'ar';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = T[lang];
+  document.documentElement.lang = t.lang;
+  document.documentElement.dir = t.dir;
+
+  // Update all data-key elements
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.dataset.key;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  // Update placeholders
+  document.querySelectorAll('[data-placeholder-key]').forEach(el => {
+    const key = el.dataset.placeholderKey;
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  // Update reservation button
+  document.querySelector('.resa-submit').textContent = t.resa_btn;
+
+  // Update active lang btn
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    if (b.textContent.trim().toLowerCase().startsWith(lang === 'ar' ? 'دارج' : lang)) b.classList.add('active');
+  });
+  // Simpler active btn detection
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick') === `setLang('${lang}')`);
+  });
+}
+
+// WhatsApp reservation
+function sendWhatsApp() {
+  const inputs = document.querySelectorAll('.resa-input');
+  const name = inputs[0].value || '---';
+  const phone = inputs[1].value || '---';
+  const date = inputs[2].value || '---';
+  const time = inputs[3].value || '---';
+  const persons = inputs[4].value || '---';
+  const note = inputs[5].value || '---';
+  const t = T[currentLang];
+  const msg = `🍣 *Samurai Street — Réservation*\n\n👤 ${t.resa_name}: ${name}\n📞 ${t.resa_phone}: ${phone}\n📅 ${t.resa_date}: ${date}\n⏰ ${t.resa_time}: ${time}\n👥 ${t.resa_persons}: ${persons}\n📝 ${t.resa_note_lbl}: ${note}`;
+  window.open('https://wa.me/212725884766?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// Custom cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.menu-card,.gallery-item').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Menu filter
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('.menu-card').forEach(card => {
+      card.style.display = (filter === 'all' || card.dataset.cat === filter) ? '' : 'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
